@@ -9,9 +9,12 @@ export const get = query({
 })
 
 export const create = mutation({
-  args: { id: v.string(), name: v.string(), createdAt: v.string(), email: v.string() },
+  args: { id: v.string(), name: v.string(), createdAt: v.string(), email: v.string(), role: v.string() },
   handler: async (ctx, args) => {
-    const user = await ctx.db.query('User').filter(q => q.eq(q.field('id'), args.id)).unique()
+    const user = await ctx.db
+      .query('User')
+      .filter(q => q.eq(q.field('id'), args.id))
+      .unique()
 
     if (user) {
       return user

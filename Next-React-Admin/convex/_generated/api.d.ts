@@ -13,6 +13,8 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as permissionRouters from "../permissionRouters.js";
+import type * as role from "../role.js";
 import type * as user from "../user.js";
 
 /**
@@ -24,6 +26,8 @@ import type * as user from "../user.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  permissionRouters: typeof permissionRouters;
+  role: typeof role;
   user: typeof user;
 }>;
 export declare const api: FilterApi<

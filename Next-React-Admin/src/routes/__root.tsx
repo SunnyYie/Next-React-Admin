@@ -53,6 +53,7 @@ function DefaultLayout() {
       id: user.id,
       email: user.emailAddresses[0].emailAddress,
       createdAt: user.createdAt?.toString() || new Date().toLocaleDateString().toString(),
+      role: 'User',
     })
   }
 

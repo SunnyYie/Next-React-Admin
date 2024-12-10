@@ -13,6 +13,9 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SettingroutersIndexImport } from './routes/setting_routers/index'
+import { Route as SettingroutersSettingImport } from './routes/setting_routers/setting'
+import { Route as SettingroutersRouterstableImport } from './routes/setting_routers/routers_table'
 
 // Create Virtual Routes
 
@@ -33,6 +36,26 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const SettingroutersIndexRoute = SettingroutersIndexImport.update({
+  id: '/setting_routers/',
+  path: '/setting_routers/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SettingroutersSettingRoute = SettingroutersSettingImport.update({
+  id: '/setting_routers/setting',
+  path: '/setting_routers/setting',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SettingroutersRouterstableRoute = SettingroutersRouterstableImport.update(
+  {
+    id: '/setting_routers/routers_table',
+    path: '/setting_routers/routers_table',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -51,6 +74,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/setting_routers/routers_table': {
+      id: '/setting_routers/routers_table'
+      path: '/setting_routers/routers_table'
+      fullPath: '/setting_routers/routers_table'
+      preLoaderRoute: typeof SettingroutersRouterstableImport
+      parentRoute: typeof rootRoute
+    }
+    '/setting_routers/setting': {
+      id: '/setting_routers/setting'
+      path: '/setting_routers/setting'
+      fullPath: '/setting_routers/setting'
+      preLoaderRoute: typeof SettingroutersSettingImport
+      parentRoute: typeof rootRoute
+    }
+    '/setting_routers/': {
+      id: '/setting_routers/'
+      path: '/setting_routers'
+      fullPath: '/setting_routers'
+      preLoaderRoute: typeof SettingroutersIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -59,36 +103,67 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
+  '/setting_routers/routers_table': typeof SettingroutersRouterstableRoute
+  '/setting_routers/setting': typeof SettingroutersSettingRoute
+  '/setting_routers': typeof SettingroutersIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
+  '/setting_routers/routers_table': typeof SettingroutersRouterstableRoute
+  '/setting_routers/setting': typeof SettingroutersSettingRoute
+  '/setting_routers': typeof SettingroutersIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/about': typeof AboutLazyRoute
+  '/setting_routers/routers_table': typeof SettingroutersRouterstableRoute
+  '/setting_routers/setting': typeof SettingroutersSettingRoute
+  '/setting_routers/': typeof SettingroutersIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/setting_routers/routers_table'
+    | '/setting_routers/setting'
+    | '/setting_routers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/setting_routers/routers_table'
+    | '/setting_routers/setting'
+    | '/setting_routers'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/setting_routers/routers_table'
+    | '/setting_routers/setting'
+    | '/setting_routers/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutLazyRoute: typeof AboutLazyRoute
+  SettingroutersRouterstableRoute: typeof SettingroutersRouterstableRoute
+  SettingroutersSettingRoute: typeof SettingroutersSettingRoute
+  SettingroutersIndexRoute: typeof SettingroutersIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutLazyRoute: AboutLazyRoute,
+  SettingroutersRouterstableRoute: SettingroutersRouterstableRoute,
+  SettingroutersSettingRoute: SettingroutersSettingRoute,
+  SettingroutersIndexRoute: SettingroutersIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -102,7 +177,10 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/about",
+        "/setting_routers/routers_table",
+        "/setting_routers/setting",
+        "/setting_routers/"
       ]
     },
     "/": {
@@ -110,6 +188,15 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.lazy.tsx"
+    },
+    "/setting_routers/routers_table": {
+      "filePath": "setting_routers/routers_table.tsx"
+    },
+    "/setting_routers/setting": {
+      "filePath": "setting_routers/setting.tsx"
+    },
+    "/setting_routers/": {
+      "filePath": "setting_routers/index.tsx"
     }
   }
 }
