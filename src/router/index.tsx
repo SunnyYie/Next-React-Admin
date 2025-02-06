@@ -8,7 +8,8 @@ import { lazy, Suspense } from 'react'
 import ProtectedRoute from './components/protected-route'
 import CircleLoading from '../components/circle-loading'
 import PageError from '../pages/errors/PageError'
-import Login from '../pages/public/login'
+import Login from '../pages/public/login/Login'
+import DashboardLayout from '../layout'
 
 // 公共路由
 const PUBLIC_ROUTE: AppRouteObject = {

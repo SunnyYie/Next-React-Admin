@@ -1,11 +1,9 @@
-import userService, { type SignInReq } from '@/api/services/userService'
+import userService, { type SignInReq } from '../api/services/userService'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import type { UserInfo, UserToken } from '#/entity'
+import { StorageEnum, UserInfo, UserToken } from './type'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
-import { StorageEnum } from '#/enum'
 import { create } from 'zustand'
-import { toast } from 'sonner'
 
 type UserStore = {
   userInfo: Partial<UserInfo>
@@ -65,11 +63,10 @@ export const useSignIn = () => {
       setUserToken({ accessToken, refreshToken })
       setUserInfo(user)
       navigatge('/dashboard/workbench', { replace: true })
-      toast.success('Sign in success!')
+
+      console.log('Sign in success!')
     } catch (err: any) {
-      toast.error(err.message, {
-        position: 'top-center',
-      })
+      console.error(err.message)
     }
   }
 

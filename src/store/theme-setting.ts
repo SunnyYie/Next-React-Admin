@@ -1,8 +1,7 @@
+import { StorageEnum, ThemeColorPresets, ThemeLayout, ThemeMode } from './type'
+import { FontFamilyPreset, typographyTokens } from '../theme/tokens/typography'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { create } from 'zustand'
-
-import { FontFamilyPreset, typographyTokens } from '@/theme/tokens/typography'
-import { StorageEnum, ThemeColorPresets, ThemeLayout, ThemeMode } from '#/enum'
 
 type SettingsType = {
   themeColorPresets: ThemeColorPresets
@@ -18,7 +17,7 @@ type SettingsType = {
 }
 
 type SettingStore = {
-  settings: SettingsType  
+  settings: SettingsType
   actions: {
     setSettings: (settings: SettingsType) => void
     clearSettings: () => void
