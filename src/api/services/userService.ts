@@ -2,7 +2,7 @@ import { UserInfo, UserToken } from '../../store/type'
 import apiClient from '../apiClient'
 
 export interface SignInReq {
-  username: string
+  email: string
   password: string
 }
 
@@ -12,8 +12,8 @@ export interface SignUpReq extends SignInReq {
 export type SignInRes = UserToken & { user: UserInfo }
 
 export enum UserApi {
-  SignIn = '/auth/signin',
-  SignUp = '/auth/signup',
+  SignIn = '/auth/login',
+  SignUp = '/auth/register',
   Logout = '/auth/logout',
   Refresh = '/auth/refresh',
   User = '/user',
