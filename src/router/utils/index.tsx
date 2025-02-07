@@ -1,4 +1,4 @@
-import { AppRouteObject, RouteMeta } from '../type'
+import { AppRouteObject, Permission, RouteMeta } from '../type'
 import { chain, ascend } from 'ramda'
 
 /**
@@ -63,4 +63,31 @@ export function flattenMenuRoutes(routes: AppRouteObject[]) {
     if (children) prev.push(...flattenMenuRoutes(children))
     return prev
   }, [])
+}
+
+/**
+ * 将子路由合并到父路由
+ */
+export function mergeRoutes(routes: Permission[]) {
+  const routeMap: { [key: string]: Permission } = {}
+  const nestedRoutes: Permission[] = []
+
+  // 将所有路由存储在一个映射中
+  routes.forEach(route => {
+    routeMap[route.id] = { ...route, children: [] }
+  })
+
+  // 构建嵌套结构
+  routes.forEach(route => {
+    if (route.parentId) {
+      const parent = routeMap[route.parentId]
+      if (parent) {
+        parent.children!.push(routeMap[route.id])
+      }
+    } else {
+      nestedRoutes.push(routeMap[route.id])
+    }
+  })
+
+  return nestedRoutes
 }

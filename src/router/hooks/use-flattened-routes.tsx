@@ -8,6 +8,7 @@ import { useCallback, useMemo } from 'react'
 export function useFlattenedRoutes() {
   const flattenRoutes = useCallback(flattenMenuRoutes, [])
   const permissionRoutes = usePermissionRoutes()
+  
   return useMemo(() => {
     const menuRoutes = menuFilter(permissionRoutes)
     return flattenRoutes(menuRoutes)

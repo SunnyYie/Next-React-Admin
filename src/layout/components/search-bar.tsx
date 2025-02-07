@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 export default function SearchBar() {
-  const { t } = useTranslation()
+  // const { t } = useTranslation()
   const inputRef = useRef<InputRef>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
@@ -24,12 +24,8 @@ export default function SearchBar() {
   const [selectedItemIndex, setSelectedItemIndex] = useState(0)
 
   const searchResult = useMemo(() => {
-    return flattenedRoutes.filter(
-      item =>
-        t(item.label).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.key.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
-  }, [searchQuery, t, flattenedRoutes])
+    return flattenedRoutes.filter(item => item.key.toLowerCase().includes(searchQuery.toLowerCase()))
+  }, [searchQuery, flattenedRoutes])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies:  在搜索结果变化时重置选中索引
   useEffect(() => {
@@ -183,7 +179,7 @@ export default function SearchBar() {
           <Scrollbar>
             <div ref={listRef} className="py-2">
               {searchResult.map(({ key, label }, index) => {
-                const partsTitle = parse(t(label), match(t(label), searchQuery))
+                // const partsTitle = parse(t(label), match(t(label), searchQuery))
                 const partsKey = parse(key, match(key, searchQuery))
                 return (
                   <StyledListItemButton
@@ -195,7 +191,7 @@ export default function SearchBar() {
                     <div className="flex justify-between">
                       <div>
                         <div className="font-medium">
-                          {partsTitle.map(item => (
+                          {/* {partsTitle.map(item => (
                             <span
                               key={item.text}
                               // style={{
@@ -206,7 +202,7 @@ export default function SearchBar() {
                             >
                               {item.text}
                             </span>
-                          ))}
+                          ))} */}
                         </div>
                         <div className="text-xs">
                           {partsKey.map(item => (

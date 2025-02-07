@@ -1,5 +1,4 @@
 import { usePermissionRoutes } from '../../../router/hooks/use-permission-routes'
-import { useFlattenedRoutes } from '../../../router/hooks/use-flattened-routes'
 import { useSettingActions, useSettings } from '../../../store/theme-setting'
 import { useRouteToMenuFn } from '../../../router/hooks/use-route-to-menu'
 import { useLocation, useMatches, useNavigate } from 'react-router'
@@ -28,7 +27,6 @@ export default function NavVertical(props: Props) {
 
   const routeToMenuFn = useRouteToMenuFn()
   const permissionRoutes = usePermissionRoutes()
-  const flattenedRoutes = useFlattenedRoutes()
 
   const collapsed = useMemo(() => themeLayout === ThemeLayout.Mini, [themeLayout])
 
@@ -58,12 +56,6 @@ export default function NavVertical(props: Props) {
   // }
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    const nextLink = flattenedRoutes?.find(e => e.key === key)
-    if (nextLink?.hideTab && nextLink?.frameSrc) {
-      window.open(nextLink?.frameSrc, '_blank')
-      return
-    }
-
     navigate(key)
     props?.closeSideBarDrawer?.()
   }

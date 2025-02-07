@@ -44,7 +44,7 @@ export function useRouteToMenuFn() {
                   themeLayout === ThemeLayout.Horizontal ? 'justify-start' : 'justify-between',
                 )}
               >
-                <div className="">{t(meta.label)}</div>
+                <div className="">{meta.label}</div>
                 {meta.suffix}
               </div>
             ),

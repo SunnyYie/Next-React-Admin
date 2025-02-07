@@ -23,7 +23,7 @@ function Login() {
   // 判断用户是否有权限
   if (token.accessToken) {
     // 如果有授权，则跳转到首页
-    return <Navigate to="/dashboard/workbench" replace />
+    return <Navigate to="/" replace />
   }
 
   // const gradientBg = rgbAlpha(themeVars.colors.background.defaultChannel, 0.9)

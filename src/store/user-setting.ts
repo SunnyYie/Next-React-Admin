@@ -4,6 +4,7 @@ import { StorageEnum, UserInfo, UserToken } from './type'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import { create } from 'zustand'
+import { mergeRoutes } from '../router/utils'
 
 type UserStore = {
   userInfo: Partial<UserInfo>
@@ -32,6 +33,7 @@ const useUserStore = create<UserStore>()(
         },
       },
     }),
+    // 将数据存储到 localStorage
     {
       name: 'userStore',
       storage: createJSONStorage(() => localStorage),
@@ -62,7 +64,12 @@ export const useSignIn = () => {
       const { user, accessToken, refreshToken } = res
 
       setUserToken({ accessToken, refreshToken })
-      setUserInfo(user)
+
+      const permissions = mergeRoutes(user.permissions!)
+      setUserInfo({
+        ...user,
+        permissions,
+      })
       navigatge('/')
 
       console.log('Sign in success!')
