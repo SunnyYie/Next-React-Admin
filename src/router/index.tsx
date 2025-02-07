@@ -56,7 +56,7 @@ export default function Router() {
         <DashboardLayout />
       </ProtectedRoute>
     ),
-    children: [{ index: true, element: <Navigate to="/dashboard/workbench" replace /> }, ...permissionRoutes],
+    children: [{ index: true, element: <Navigate to="/" replace /> }, ...permissionRoutes],
   }
 
   const routes = [PUBLIC_ROUTE, PROTECTED_ROUTE, ERROR_ROUTE, NO_MATCHED_ROUTE] as RouteObject[]

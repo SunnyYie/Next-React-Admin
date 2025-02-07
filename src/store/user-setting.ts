@@ -60,9 +60,10 @@ export const useSignIn = () => {
     try {
       const res = await signInMutation.mutateAsync(data)
       const { user, accessToken, refreshToken } = res
+
       setUserToken({ accessToken, refreshToken })
       setUserInfo(user)
-      navigatge('/dashboard/workbench', { replace: true })
+      navigatge('/')
 
       console.log('Sign in success!')
     } catch (err: any) {

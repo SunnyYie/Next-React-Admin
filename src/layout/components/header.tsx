@@ -6,8 +6,13 @@ import { cn } from '../../utils'
 import { Drawer } from 'antd'
 
 import { IconButton, Iconify, SvgIcon } from '../../components/icon'
+import AccountDropdown from './account-dropdown'
+import SettingButton from './setting-button'
 import NavVertical from './nav/nav-vertical'
 import Logo from '../../components/logo'
+import SearchBar from './search-bar'
+import NoticeButton from './notice'
+import LocalePicker from '../../components/locale-picker'
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -44,17 +49,14 @@ export default function Header() {
           </div>
 
           <div className="flex">
-            {/* <SearchBar />
-            <LocalePicker /> */}
-            <IconButton onClick={() => window.open('https://github.com/d3george/slash-admin')}>
+            <SearchBar />
+            <LocalePicker />
+            <IconButton onClick={() => window.open('https://github.com')}>
               <Iconify icon="mdi:github" size={24} />
             </IconButton>
-            <IconButton onClick={() => window.open('https://discord.gg/fXemAXVNDa')}>
-              <Iconify icon="carbon:logo-discord" size={24} />
-            </IconButton>
-            {/* <NoticeButton />
+            <NoticeButton />
             <SettingButton />
-            <AccountDropdown /> */}
+            <AccountDropdown />
           </div>
         </div>
       </header>

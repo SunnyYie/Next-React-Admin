@@ -1,11 +1,7 @@
-import { faker } from "@faker-js/faker";
 import { Badge, Button, Drawer, Space, Tabs, type TabsProps, Tag } from "antd";
 import { type CSSProperties, type ReactNode, useState } from "react";
-
-import CyanBlur from "@/assets/images/background/cyan-blur.png";
-import RedBlur from "@/assets/images/background/red-blur.png";
-import { IconButton, Iconify, SvgIcon } from "@/components/icon";
-import { themeVars } from "@/theme/theme.css";
+import { IconButton, Iconify, SvgIcon } from "../../components/icon";
+import { faker } from "@faker-js/faker";
 
 export default function NoticeButton() {
 	const [drawerOpen, setDrawerOpen] = useState(false);
@@ -13,9 +9,9 @@ export default function NoticeButton() {
 
 	const style: CSSProperties = {
 		backdropFilter: "blur(20px)",
-		backgroundImage: `url("${CyanBlur}"), url("${RedBlur}")`,
+		// backgroundImage: `url("${CyanBlur}"), url("${RedBlur}")`,
 		backgroundRepeat: "no-repeat, no-repeat",
-		backgroundColor: `rgba(${themeVars.colors.background.paperChannel}, 0.9)`,
+		// backgroundColor: `rgba(${themeVars.colors.background.paperChannel}, 0.9)`,
 		backgroundPosition: "right top, left bottom",
 		backgroundSize: "50, 50%",
 	};
@@ -27,7 +23,7 @@ export default function NoticeButton() {
 					count={count}
 					styles={{
 						root: { color: "inherit" },
-						indicator: { color: themeVars.colors.common.white },
+						// indicator: { color: themeVars.colors.common.white },
 					}}
 				>
 					<Iconify icon="solar:bell-bing-bold-duotone" size={24} />
@@ -47,7 +43,7 @@ export default function NoticeButton() {
 				style={style}
 				extra={
 					<IconButton
-						style={{ color: themeVars.colors.palette.primary.default }}
+						// style={{ color: themeVars.colors.palette.primary.default }}
 						onClick={() => {
 							setCount(0);
 							setDrawerOpen(false);
@@ -58,7 +54,7 @@ export default function NoticeButton() {
 				}
 				footer={
 					<div
-						style={{ color: themeVars.colors.text.primary }}
+						// style={{ color: themeVars.colors.text.primary }}
 						className="flex h-10 w-full items-center justify-center font-semibold"
 					>
 						View All

@@ -12,12 +12,10 @@ const axiosInstance = axios.create({
 // 请求拦截
 axiosInstance.interceptors.request.use(
   config => {
-    // 在请求被发送之前做些什么
     config.headers.Authorization = 'Bearer Token'
     return config
   },
   error => {
-    // 请求错误时做些什么
     return Promise.reject(error)
   },
 )
