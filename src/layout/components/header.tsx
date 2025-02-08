@@ -6,13 +6,14 @@ import { cn } from '../../utils'
 import { Drawer } from 'antd'
 
 import { IconButton, Iconify, SvgIcon } from '../../components/icon'
+import LocalePicker from '../../components/locale-picker'
 import AccountDropdown from './account-dropdown'
 import SettingButton from './setting-button'
 import NavVertical from './nav/nav-vertical'
 import Logo from '../../components/logo'
 import SearchBar from './search-bar'
 import NoticeButton from './notice'
-import LocalePicker from '../../components/locale-picker'
+import { MenuUnfoldOutlined } from '@ant-design/icons'
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -20,7 +21,7 @@ export default function Header() {
 
   const headerStyle: CSSProperties = {
     borderBottom: themeLayout === ThemeLayout.Horizontal ? `1px dashed gray` : '',
-    backgroundColor: 'white',
+    backgroundColor: 'white opacity-90',
     width: '100%',
   }
 
@@ -39,9 +40,10 @@ export default function Header() {
         >
           <div className="flex items-baseline">
             {themeLayout !== ThemeLayout.Horizontal ? (
-              <IconButton onClick={() => setDrawerOpen(true)} className="h-10 w-10 md:hidden">
-                <SvgIcon icon="ic-menu" size="24" />
-              </IconButton>
+              // <IconButton onClick={() => setDrawerOpen(true)} className="h-10 w-10 md:hidden">
+              //   <SvgIcon icon="ic-menu" size="24" />
+              // </IconButton>
+              <MenuUnfoldOutlined onClick={() => setDrawerOpen(true)} className="h-10 w-10 md:hidden" />
             ) : (
               <Logo />
             )}
