@@ -5,6 +5,11 @@ export interface UserToken {
   refreshToken?: string
 }
 
+export interface PermissionKey {
+  id: string
+  label: string
+}
+
 export interface UserInfo {
   id: string
   email: string
@@ -13,6 +18,7 @@ export interface UserInfo {
   avatar?: string
   role?: Role
   permissions?: Permission[]
+  permissionKeys?: PermissionKey[]
 }
 
 export interface Role {

@@ -12,7 +12,9 @@ const axiosInstance = axios.create({
 // 请求拦截
 axiosInstance.interceptors.request.use(
   config => {
-    config.headers.Authorization = 'Bearer Token'
+    // 添加 token
+    const token = userStore.getState().userToken.accessToken
+    if (token) config.headers.Authorization = `Bearer ${token}`
     return config
   },
   error => {
