@@ -1,12 +1,12 @@
 import { useFlattenedRoutes } from '../../router/hooks/use-flattened-routes'
 import { useBoolean, useEvent, useKeyPressEvent } from 'react-use'
 import { Empty, Input, type InputRef, Modal, Tag } from 'antd'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import { IconButton, SvgIcon } from '../../components/icon'
 import Scrollbar from '../../components/scroll-bar'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
@@ -16,10 +16,14 @@ export default function SearchBar() {
   const listRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
-  const [search, toggle] = useBoolean(false)
-
   const flattenedRoutes = useFlattenedRoutes()
 
+  const activeStyle: CSSProperties = {
+    border: `1px dashed #00A76F`,
+    backgroundColor: 'rgba(0, 167, 111, 0.1)',
+  }
+
+  const [search, toggle] = useBoolean(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedItemIndex, setSelectedItemIndex] = useState(0)
 
@@ -114,10 +118,10 @@ export default function SearchBar() {
   return (
     <>
       <div className="flex items-center justify-center">
-        <IconButton className="h-8 rounded-xl bg-hover py-2 text-xs font-bold" onClick={handleOpen}>
+        <IconButton className="h-8 rounded-xl bg-gray-100 py-2 text-xs font-bold" onClick={handleOpen}>
           <div className="flex items-center justify-center gap-2">
             <SvgIcon icon="ic-search" size="20" />
-            <span className="flex h-6 items-center justify-center rounded-md bg-common-white px-1.5 font-bold text-gray-800">
+            <span className="flex h-6 items-center justify-center rounded-md bg-white px-1.5 font-bold text-gray-800">
               {' '}
               ⌘K{' '}
             </span>
@@ -149,7 +153,7 @@ export default function SearchBar() {
             autoFocus
             prefix={<SvgIcon icon="ic-search" size="20" />}
             suffix={
-              <IconButton className="h-6 rounded-md bg-hover text-xs" onClick={handleCancel}>
+              <IconButton className="h-6 rounded-md bg-gray-100 text-xs" onClick={handleCancel}>
                 Esc
               </IconButton>
             }
@@ -179,40 +183,36 @@ export default function SearchBar() {
           <Scrollbar>
             <div ref={listRef} className="py-2">
               {searchResult.map(({ key, label }, index) => {
-                // const partsTitle = parse(t(label), match(t(label), searchQuery))
+                const partsTitle = parse(label, match(label, searchQuery))
                 const partsKey = parse(key, match(key, searchQuery))
                 return (
                   <StyledListItemButton
                     key={key}
-                    // style={index === selectedItemIndex ? activeStyle : {}}
+                    style={index === selectedItemIndex ? activeStyle : {}}
                     onClick={() => handleSelect(key)}
                     onMouseMove={() => handleHover(index)}
                   >
                     <div className="flex justify-between">
                       <div>
                         <div className="font-medium">
-                          {/* {partsTitle.map(item => (
+                          {partsTitle.map(item => (
                             <span
                               key={item.text}
-                              // style={{
-                              //   color: item.highlight
-                              //     ? themeVars.colors.palette.primary.default
-                              //     : themeVars.colors.text.primary,
-                              // }}
+                              style={{
+                                color: item.highlight ? 'black' : 'black',
+                              }}
                             >
                               {item.text}
                             </span>
-                          ))} */}
+                          ))}
                         </div>
                         <div className="text-xs">
                           {partsKey.map(item => (
                             <span
                               key={item.text}
-                              // style={{
-                              //   color: item.highlight
-                              //     ? themeVars.colors.palette.primary.default
-                              //     : themeVars.colors.text.secondary,
-                              // }}
+                              style={{
+                                color: item.highlight ? 'black' : 'black',
+                              }}
                             >
                               {item.text}
                             </span>
@@ -238,4 +238,5 @@ const StyledListItemButton = styled.div`
   width: 100%;
   padding: 8px 16px;
   border-radius: 8px;
+  color: gray;
 `

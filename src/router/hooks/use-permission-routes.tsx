@@ -1,19 +1,21 @@
-import { useUserPermission } from '../../store/user-setting'
+import { useUserFlattenPermissions, useUserPermission } from '../../store/user-setting'
+import { AppRouteObject, Permission, PermissionType } from '../type'
 import CircleLoading from '../../components/circle-loading'
 import { Suspense, lazy, useMemo } from 'react'
 import { Navigate, Outlet } from 'react-router'
-import { flattenTrees } from '../utils'
+// import { flattenTrees } from '../utils'
 import { isEmpty } from 'ramda'
-
-import { AppRouteObject, Permission, PermissionType } from '../type'
 
 // 获取权限路由
 export function usePermissionRoutes() {
   const permissions = useUserPermission()
-  return useMemo(() => {
-    if (!permissions) return []
+  const flattenedPermissions = useUserFlattenPermissions()
 
-    const flattenedPermissions = flattenTrees<Permission>(permissions)
+  return useMemo(() => {
+    if (!permissions || !flattenedPermissions) return []
+
+    // const flattenedPermissions = flattenTrees<Permission>(permissions)
+
     return transformPermissionsToRoutes(permissions, flattenedPermissions)
   }, [permissions])
 }
@@ -21,7 +23,7 @@ export function usePermissionRoutes() {
 // 将权限数组转换为路由数组
 function transformPermissionsToRoutes(permissions: Permission[], flattenedPermissions: Permission[]): AppRouteObject[] {
   return permissions.map(permission => {
-    if (permission.type === PermissionType.CATALOGUE) {
+    if (permission.type == PermissionType.catalogue) {
       return createCatalogueRoute(permission, flattenedPermissions)
     }
     return createMenuRoute(permission, flattenedPermissions)

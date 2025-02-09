@@ -16,6 +16,8 @@ import RegisterForm from './RegisterForm'
 import ResetForm from './ResetForm'
 import { LoginStateProvider } from './providers/LoginStateProvider'
 
+const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
+
 function Login() {
   // const { t } = useTranslation()
   const token = useUserToken()
@@ -23,7 +25,7 @@ function Login() {
   // 判断用户是否有权限
   if (token.accessToken) {
     // 如果有授权，则跳转到首页
-    return <Navigate to="/" replace />
+    return <Navigate to={HOMEPAGE} replace />
   }
 
   // const gradientBg = rgbAlpha(themeVars.colors.background.defaultChannel, 0.9)

@@ -34,6 +34,7 @@ export default function NavHorizontal() {
         selectedKeys={selectedKeys}
         onClick={onClick}
         className="!border-none"
+        style={{ background: 'transparent' }}
       />
     </div>
   )

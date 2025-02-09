@@ -13,7 +13,7 @@ interface SvgIconProps {
 export default function SvgIcon({
   icon,
   prefix = 'icon',
-  color = 'currentColor',
+  color = '#333',
   size = '1em',
   className = '',
   style = {},
@@ -35,7 +35,7 @@ export default function SvgIcon({
       aria-label={icon}
     >
       <title>{icon}</title>
-      <use xlinkHref={symbolId} fill="currentColor" />
+      <use xlinkHref={symbolId} fill={color} />
     </svg>
   )
 }

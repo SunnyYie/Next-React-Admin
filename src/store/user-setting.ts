@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router'
 import { create } from 'zustand'
 import { mergeRoutes } from '../router/utils'
 
+const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
+
 type UserStore = {
   userInfo: Partial<UserInfo>
   userToken: UserToken
@@ -40,7 +42,6 @@ const useUserStore = create<UserStore>()(
       partialize: state => ({
         [StorageEnum.UserInfo]: state.userInfo,
         [StorageEnum.UserToken]: state.userToken,
-        
       }),
     },
   ),
@@ -50,6 +51,7 @@ export const useUserInfo = () => useUserStore(state => state.userInfo)
 export const useUserToken = () => useUserStore(state => state.userToken)
 export const useUserPermission = () => useUserStore(state => state.userInfo.permissions)
 export const useUserPermissionKeys = () => useUserStore(state => state.userInfo.permissionKeys)
+export const useUserFlattenPermissions = () => useUserStore(state => state.userInfo.flattenPermissions)
 export const useUserActions = () => useUserStore(state => state.actions)
 
 export const useSignIn = () => {
@@ -68,11 +70,13 @@ export const useSignIn = () => {
       setUserToken({ accessToken, refreshToken })
 
       const permissions = mergeRoutes(user.permissions!)
+
       setUserInfo({
         ...user,
         permissions,
+        flattenPermissions: user.permissions!,
       })
-      navigatge('/')
+      navigatge(HOMEPAGE)
 
       console.log('Sign in success!')
     } catch (err: any) {

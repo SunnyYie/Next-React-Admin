@@ -8,11 +8,10 @@ import { m } from 'framer-motion'
 import { ThemeColorPresets, ThemeLayout, ThemeMode } from '../../store/type'
 import { IconButton, SvgIcon } from '../../components/icon'
 import { cn } from '../../utils'
+import { presetsColors } from '../../theme/tokens/color'
+import { FontFamilyPreset } from '../../theme/tokens/typography'
 // import { varHover } from "@/components/animate/variants/action";
 
-/**
- * App Setting
- */
 export default function SettingButton() {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -95,7 +94,10 @@ export default function SettingButton() {
 
   const style: CSSProperties = {
     backdropFilter: 'blur(20px)',
+    // backgroundImage: `url("${CyanBlur}"), url("${RedBlur}")`,
     backgroundRepeat: 'no-repeat, no-repeat',
+    // backgroundColor: `rgba(${themeVars.colors.background.paperChannel}, 0.9)`,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     backgroundPosition: 'right top, left bottom',
     backgroundSize: '50, 50%',
   }
@@ -107,6 +109,9 @@ export default function SettingButton() {
       setIsFullscreen(!isFullscreen)
     }
   }
+
+  const layoutBackground = (layout: ThemeLayout) =>
+    themeLayout === layout ? `linear-gradient(135deg, black  0%, blue 100%)` : 'bg-gray-500'
 
   return (
     <>
@@ -122,7 +127,10 @@ export default function SettingButton() {
           }}
           whileTap="tap"
           whileHover="hover"
-          // variants={varHover(1.05)}
+          variants={{
+            tap: { scale: 0.9 },
+            hover: { scale: 1.1 },
+          }}
           onClick={() => setDrawerOpen(true)}
         >
           <IconButton className="h-10 w-10">
@@ -130,6 +138,7 @@ export default function SettingButton() {
           </IconButton>
         </m.div>
       </div>
+      
       <Drawer
         placement="right"
         title="Settings"
@@ -180,7 +189,7 @@ export default function SettingButton() {
                 <SvgIcon
                   icon="ic-settings-mode-sun"
                   size="24"
-                  // color={themeMode === ThemeMode.Light ? themeVars.colors.palette.primary.default : ""}
+                  // color={themeMode === ThemeMode.Light ? themeVars.colors.palette.primary.default : ''}
                 />
               </Card>
               <Card
@@ -190,7 +199,7 @@ export default function SettingButton() {
                 <SvgIcon
                   icon="ic-settings-mode-moon"
                   size="24"
-                  // color={themeMode === ThemeMode.Dark ? themeVars.colors.palette.primary.default : ""}
+                  // color={themeMode === ThemeMode.Dark ? themeVars.colors.palette.primary.default : ''}
                 />
               </Card>
             </div>
@@ -217,29 +226,29 @@ export default function SettingButton() {
                 <div className="flex h-full w-7 flex-shrink-0 flex-col gap-1 p-1">
                   <div
                     className="h-2 w-2 flex-shrink-0 rounded"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Vertical),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Vertical),
+                    }}
                   />
                   <div
                     className="h-1 w-full flex-shrink-0 rounded opacity-50"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Vertical),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Vertical),
+                    }}
                   />
                   <div
                     className="h-1 max-w-[12px] flex-shrink-0 rounded opacity-20"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Vertical),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Vertical),
+                    }}
                   />
                 </div>
                 <div className="h-full w-full flex-1 flex-grow p-1">
                   <div
                     className="h-full w-full rounded opacity-20"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Vertical),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Vertical),
+                    }}
                   />
                 </div>
               </Card>
@@ -261,29 +270,29 @@ export default function SettingButton() {
                 <div className="flex h-4 w-full items-center gap-1  p-1">
                   <div
                     className="h-2 w-2 flex-shrink-0 rounded"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Horizontal),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Horizontal),
+                    }}
                   />
                   <div
                     className="h-1 w-4 flex-shrink-0 rounded opacity-50"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Horizontal),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Horizontal),
+                    }}
                   />
                   <div
                     className="h-1 w-3 flex-shrink-0 rounded opacity-20"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Horizontal),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Horizontal),
+                    }}
                   />
                 </div>
                 <div className="h-full w-full flex-1 flex-grow p-1">
                   <div
                     className="h-full w-full rounded opacity-20"
-                    // style={{
-                    // 	background: layoutBackground(ThemeLayout.Horizontal),
-                    // }}
+                    style={{
+                      background: layoutBackground(ThemeLayout.Horizontal),
+                    }}
                   />
                 </div>
               </Card>
@@ -304,21 +313,21 @@ export default function SettingButton() {
                 <div className="flex h-full flex-shrink-0 flex-col gap-1 p-1">
                   <div
                     className="h-2 w-2 flex-shrink-0 rounded"
-                    // style={{ background: layoutBackground(ThemeLayout.Mini) }}
+                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
                   />
                   <div
                     className="h-1 w-full flex-shrink-0 rounded opacity-50"
-                    // style={{ background: layoutBackground(ThemeLayout.Mini) }}
+                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
                   />
                   <div
                     className="h-1 max-w-[12px] flex-shrink-0 rounded opacity-20"
-                    // style={{ background: layoutBackground(ThemeLayout.Mini) }}
+                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
                   />
                 </div>
                 <div className="h-full w-full flex-1 flex-grow p-1">
                   <div
                     className="h-full w-full rounded opacity-20"
-                    // style={{ background: layoutBackground(ThemeLayout.Mini) }}
+                    style={{ background: layoutBackground(ThemeLayout.Mini) }}
                   />
                 </div>
               </Card>
@@ -378,7 +387,7 @@ export default function SettingButton() {
           <div>
             <div className="mb-3 text-base font-semibold text-text-secondary">Presets</div>
             <div className="grid grid-cols-3 gap-x-4 gap-y-3">
-              {/* {Object.entries(presetsColors).map(([preset, color]) => (
+              {Object.entries(presetsColors).map(([preset, color]) => (
                 <Card
                   key={preset}
                   className="flex h-12 w-full cursor-pointer items-center justify-center"
@@ -395,7 +404,7 @@ export default function SettingButton() {
                     />
                   </div>
                 </Card>
-              ))} */}
+              ))}
             </div>
           </div>
 
@@ -405,31 +414,31 @@ export default function SettingButton() {
 
             <div className="my-3 text-sm font-semibold text-text-disabled">Family</div>
             <div className="flex flex-row gap-3">
-              {/* {Object.entries(FontFamilyPreset).map(([font, family]) => (
-								<Card
-									key={font}
-									className="flex h-20 w-full cursor-pointer items-center justify-center"
-									onClick={() => setFontFamily(family)}
-								>
-									<div
-										className={cn(
-											fontFamily === family ? "text-primary font-medium" : "text-text-disabled",
-											"text-center text-lg",
-										)}
-									>
-										<span>A</span>
-										<span className="opacity-50 ml-0.5">a</span>
-									</div>
-									<span
-										className={cn(
-											fontFamily === family ? "text-text-primary font-medium" : "text-text-disabled",
-											"text-sm",
-										)}
-									>
-										{family.replace("Variable", "")}
-									</span>
-								</Card>
-							))} */}
+              {Object.entries(FontFamilyPreset).map(([font, family]) => (
+                <Card
+                  key={font}
+                  className="flex h-20 w-full cursor-pointer items-center justify-center"
+                  onClick={() => setFontFamily(family)}
+                >
+                  <div
+                    className={cn(
+                      fontFamily === family ? 'text-primary font-medium' : 'text-text-disabled',
+                      'text-center text-lg',
+                    )}
+                  >
+                    <span>A</span>
+                    <span className="opacity-50 ml-0.5">a</span>
+                  </div>
+                  <span
+                    className={cn(
+                      fontFamily === family ? 'text-text-primary font-medium' : 'text-text-disabled',
+                      'text-sm',
+                    )}
+                  >
+                    {family.replace('Variable', '')}
+                  </span>
+                </Card>
+              ))}
             </div>
 
             <div className="my-3 text-sm font-semibold text-text-disabled">Size</div>

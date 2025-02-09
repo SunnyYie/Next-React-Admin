@@ -7,7 +7,7 @@ interface Props {
 function Logo({ size = 50 }: Props) {
   return (
     <NavLink to="/">
-      <Iconify icon="solar:code-square-bold" size={size} />
+      <Iconify icon="solar:code-square-bold" color="#00A76F" size={size} />
     </NavLink>
   )
 }

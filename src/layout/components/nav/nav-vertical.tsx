@@ -9,6 +9,7 @@ import { menuFilter } from '../../../router/utils'
 import { ThemeMode } from '../../../store/type'
 import { NAV_WIDTH } from '../../config'
 import Scrollbar from '../../../components/scroll-bar'
+import NavLogo from './nav-logo'
 
 const { Sider } = Layout
 
@@ -48,12 +49,12 @@ export default function NavVertical(props: Props) {
     }
   }, [collapsed, matches, pathname])
 
-  // const handleToggleCollapsed = () => {
-  //   setSettings({
-  //     ...settings,
-  //     themeLayout: collapsed ? ThemeLayout.Vertical : ThemeLayout.Mini,
-  //   })
-  // }
+  const handleToggleCollapsed = () => {
+    setSettings({
+      ...settings,
+      themeLayout: collapsed ? ThemeLayout.Vertical : ThemeLayout.Mini,
+    })
+  }
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     navigate(key)
@@ -78,10 +79,10 @@ export default function NavVertical(props: Props) {
       collapsed={collapsed}
       width={NAV_WIDTH}
       theme={sidebarTheme}
-      className="!fixed left-0 top-0 h-screen border-r border-dashed border-border"
+      className="!fixed left-0 top-0 h-screen border-r border-dashed border-gray-50"
     >
       <div className="flex h-full flex-col">
-        {/* <NavLogo collapsed={collapsed} onToggle={handleToggleCollapsed} /> */}
+        <NavLogo collapsed={collapsed} onToggle={handleToggleCollapsed} />
 
         <Scrollbar>
           <Menu

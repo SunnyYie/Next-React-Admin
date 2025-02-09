@@ -59,6 +59,9 @@ export enum PermissionType {
   CATALOGUE = 0,
   MENU = 1,
   BUTTON = 2,
+  catalogue = 'CATALOGUE',
+  menu = 'MENU',
+  button = 'BUTTON',
 }
 
 export interface Permission {

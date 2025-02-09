@@ -6,14 +6,14 @@ import { cn } from '../../utils'
 import { Drawer } from 'antd'
 
 import { IconButton, Iconify, SvgIcon } from '../../components/icon'
-import LocalePicker from '../../components/locale-picker'
+
 import AccountDropdown from './account-dropdown'
 import SettingButton from './setting-button'
 import NavVertical from './nav/nav-vertical'
 import Logo from '../../components/logo'
 import SearchBar from './search-bar'
 import NoticeButton from './notice'
-import { MenuUnfoldOutlined } from '@ant-design/icons'
+import BreadCrumb from './bread-crumb'
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -21,7 +21,7 @@ export default function Header() {
 
   const headerStyle: CSSProperties = {
     borderBottom: themeLayout === ThemeLayout.Horizontal ? `1px dashed gray` : '',
-    backgroundColor: 'white opacity-90',
+    backgroundColor: 'white',
     width: '100%',
   }
 
@@ -40,20 +40,18 @@ export default function Header() {
         >
           <div className="flex items-baseline">
             {themeLayout !== ThemeLayout.Horizontal ? (
-              // <IconButton onClick={() => setDrawerOpen(true)} className="h-10 w-10 md:hidden">
-              //   <SvgIcon icon="ic-menu" size="24" />
-              // </IconButton>
-              <MenuUnfoldOutlined onClick={() => setDrawerOpen(true)} className="h-10 w-10 md:hidden" />
+              <IconButton onClick={() => setDrawerOpen(true)} className="h-10 w-10 md:hidden">
+                <SvgIcon icon="ic-menu" size="24" />
+              </IconButton>
             ) : (
               <Logo />
             )}
-            {/* <div className="ml-4 hidden md:block">{breadCrumb ? <BreadCrumb /> : null}</div> */}
+            <div className="ml-4 hidden md:block">{breadCrumb ? <BreadCrumb /> : null}</div>
           </div>
 
           <div className="flex">
             <SearchBar />
-            <LocalePicker />
-            <IconButton onClick={() => window.open('https://github.com')}>
+            <IconButton onClick={() => window.open('https://github.com/SunnyYie/Next-React-Admin')}>
               <Iconify icon="mdi:github" size={24} />
             </IconButton>
             <NoticeButton />
@@ -62,6 +60,7 @@ export default function Header() {
           </div>
         </div>
       </header>
+
       <Drawer
         placement="left"
         onClose={() => setDrawerOpen(false)}
@@ -69,7 +68,7 @@ export default function Header() {
         closeIcon={false}
         width={themeLayout === ThemeLayout.Mini ? NAV_COLLAPSED_WIDTH : NAV_WIDTH}
       >
-        <NavVertical />
+        <NavVertical closeSideBarDrawer={() => setDrawerOpen(false)} />
       </Drawer>
     </>
   )

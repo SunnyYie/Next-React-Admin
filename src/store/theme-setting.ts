@@ -15,9 +15,9 @@ type SettingsType = {
   fontSize: number
   direction: 'ltr' | 'rtl'
 }
-
 type SettingStore = {
   settings: SettingsType
+  // 使用 actions 命名空间来存放所有的 action
   actions: {
     setSettings: (settings: SettingsType) => void
     clearSettings: () => void
@@ -49,8 +49,8 @@ const useSettingStore = create<SettingStore>()(
       },
     }),
     {
-      name: StorageEnum.Settings,
-      storage: createJSONStorage(() => localStorage),
+      name: StorageEnum.Settings, // name of the item in the storage (must be unique)
+      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
       partialize: state => ({ [StorageEnum.Settings]: state.settings }),
     },
   ),

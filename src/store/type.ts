@@ -13,12 +13,13 @@ export interface PermissionKey {
 export interface UserInfo {
   id: string
   email: string
-  username: string
+  name: string
   password?: string
   avatar?: string
   role?: Role
   permissions?: Permission[]
   permissionKeys?: PermissionKey[]
+  flattenPermissions?: Permission[]
 }
 
 export interface Role {
