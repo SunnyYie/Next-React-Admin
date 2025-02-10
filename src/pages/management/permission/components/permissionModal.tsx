@@ -11,13 +11,13 @@ interface PermissionModalProps {
 }
 
 const options: CheckboxGroupProps<string>['options'] = [
-  { label: PermissionType.catalogue, value: '0' },
-  { label: PermissionType.menu, value: '1' },
+  { label: PermissionType.catalogue, value: 'CATALOGUE' },
+  { label: PermissionType.menu, value: 'MENU' },
 ]
 
-const hideOptions: CheckboxGroupProps<string>['options'] = [
-  { label: '是', value: 'true' },
-  { label: '否', value: 'false' },
+const hideOptions: CheckboxGroupProps<boolean>['options'] = [
+  { label: '是', value: true },
+  { label: '否', value: false },
 ]
 
 export default function PermissionForm({ visible, onCancel, onSave, initialValues }: PermissionModalProps) {
@@ -51,7 +51,7 @@ export default function PermissionForm({ visible, onCancel, onSave, initialValue
         {/* 权限类型 */}
         <Form.Item name="type" label="权限类型" rules={[{ required: true, message: '请选择权限类型' }]}>
           <Radio.Group
-            defaultValue={String(PermissionType.MENU)}
+            defaultValue={String(PermissionType.menu)}
             buttonStyle="solid"
             optionType="button"
             options={options}
@@ -75,7 +75,7 @@ export default function PermissionForm({ visible, onCancel, onSave, initialValue
         <Form.Item shouldUpdate={(prevValues, currentValues) => prevValues.type !== currentValues.type}>
           {({ getFieldValue }) => {
             const type = getFieldValue('type')
-            if (type == String(PermissionType.CATALOGUE)) {
+            if (type == String(PermissionType.catalogue)) {
               return (
                 <>
                   <Form.Item name="order" label="排序" rules={[{ required: true, message: '请输入排序' }]}>
@@ -87,7 +87,7 @@ export default function PermissionForm({ visible, onCancel, onSave, initialValue
                 </>
               )
             }
-            if (type == String(PermissionType.MENU)) {
+            if (type == String(PermissionType.menu)) {
               return (
                 <>
                   <Form.Item name="component" label="组件" rules={[{ required: true, message: '请输入组件' }]}>
