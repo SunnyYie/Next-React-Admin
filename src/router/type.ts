@@ -64,6 +64,19 @@ export enum PermissionType {
   button = 'BUTTON',
 }
 
+export enum Role {
+  AMDIN = 1,
+  USER = 2,
+  admin = 'ADMIN',
+  user = 'USER',
+}
+
+export interface PermissionRole {
+  id: string
+  roleId: string
+  permissionId: string
+}
+
 export interface Permission {
   id: string
   parentId: string
@@ -79,4 +92,6 @@ export interface Permission {
   frameSrc?: URL
   newFeature?: boolean
   children?: Permission[]
+
+  roles?: PermissionRole[]
 }
