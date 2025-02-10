@@ -4,10 +4,16 @@ export interface UserToken {
   accessToken?: string
   refreshToken?: string
 }
+export interface RolePermissionKey {
+  id: string
+  roleId: string
+  permissionKeyId: string
+}
 
 export interface PermissionKey {
   id: string
   label: string
+  RolePermissionKeys?: RolePermissionKey[]
 }
 
 export interface UserInfo {

@@ -6,6 +6,7 @@ import PermissionModal from './components/permissionModal'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Navigate } from 'react-router'
 import { useState } from 'react'
+import AuthGuard from '../../../components/auth/authGuard'
 
 export default function PermissionPage() {
   const { data, isLoading, isError } = useQuery({
@@ -120,10 +121,15 @@ export default function PermissionPage() {
       key: 'action',
       render: (_: any, record: Permission) => (
         <Space size="middle">
-          <Button onClick={() => handleEdit(record)}>编辑</Button>
-          <Button danger onClick={() => handleDelete(record.id)}>
-            删除
-          </Button>
+          <AuthGuard permissionKeys="management:permission:edit">
+            <Button onClick={() => handleEdit(record)}>编辑</Button>
+          </AuthGuard>
+
+          <AuthGuard permissionKeys="management:permission:delete">
+            <Button danger onClick={() => handleDelete(record.id)}>
+              删除
+            </Button>
+          </AuthGuard>
         </Space>
       ),
     },
@@ -134,9 +140,11 @@ export default function PermissionPage() {
 
   return (
     <div>
-      <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
-        添加权限
-      </Button>
+      <AuthGuard permissionKeys="management:permission:add">
+        <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
+          添加权限
+        </Button>
+      </AuthGuard>
       <Table columns={columns} dataSource={data} rowKey="id" />
 
       <PermissionModal
