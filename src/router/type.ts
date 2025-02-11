@@ -93,5 +93,6 @@ export interface Permission {
   newFeature?: boolean
   children?: Permission[]
 
+  roleId?: string
   roles?: PermissionRole[]
 }

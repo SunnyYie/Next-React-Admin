@@ -1,12 +1,15 @@
 import permissionService from '../../../api/services/management/permissionService'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import PermissionTypeTag from '../../../components/tag/permission-type-tag'
+import useToastConfirm from '../../../components/toast/useToastConfirm'
 import { Permission, PermissionType } from '../../../router/type'
-import { Button, message, Modal, Space, Table, Tag } from 'antd'
 import CircleLoading from '../../../components/circle-loading'
 import CombineSearch from '../../../components/combine-search'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import PermissionModal from './components/permissionModal'
 import AuthGuard from '../../../components/auth/authGuard'
+import { Button, message, Space, Table } from 'antd'
+import RoleTag from '../../../components/tag/role-tag'
 import { Navigate } from 'react-router'
 import { useState } from 'react'
 
@@ -36,6 +39,8 @@ export default function PermissionPage() {
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   const queryClient = useQueryClient()
+
+  const showDeleteConfirm = useToastConfirm()
 
   // 新增
   const createPermissionMutation = useMutation({
@@ -75,11 +80,11 @@ export default function PermissionPage() {
   }
 
   const handleDelete = (id: string) => {
-    Modal.confirm({
+    showDeleteConfirm({
       title: '确认删除',
-      icon: <ExclamationCircleOutlined />,
       content: '您确定要删除这个权限吗?',
-      onOk() {
+      icon: <ExclamationCircleOutlined />,
+      onOk: () => {
         deletePermissionMutation
           .mutateAsync({ permissionId: id })
           .then(() => {
@@ -96,12 +101,21 @@ export default function PermissionPage() {
   const handleSave = async (values: Permission) => {
     try {
       if (editingPermission) {
-        await updatePermissionMutation.mutateAsync({ permissionId: editingPermission.id, permissionData: values })
+        await updatePermissionMutation.mutateAsync({
+          permissionId: editingPermission.id,
+          permissionData: {
+            ...values,
+            roleId: String(editingPermission.roles?.at(0)?.roleId),
+          },
+        })
         message.success('权限已更新')
       } else {
         // 添加新权限
-        await createPermissionMutation.mutateAsync({ roleId: '1', permissionData: [values] })
-        message.success('新权限已添加')
+        const { roleId } = values
+        delete values.roleId
+
+        await createPermissionMutation.mutateAsync({ roleId: String(roleId!), permissionData: [values] })
+        message.success('新权限添加成功')
       }
 
       queryClient.invalidateQueries({ queryKey: ['allpermissions'] })
@@ -124,9 +138,7 @@ export default function PermissionPage() {
       render: (_: any, record: Permission) => (
         <Space size="middle">
           {record.roles?.map(role => (
-            <Tag color={role.roleId == '1' ? 'green' : 'blue'} key={role.id}>
-              {role.roleId == '1' ? '管理员' : '用户'}
-            </Tag>
+            <RoleTag key={role.id} role={role} />
           ))}
         </Space>
       ),
@@ -134,15 +146,7 @@ export default function PermissionPage() {
     {
       title: '类型',
       key: 'type',
-      render: (_: any, record: Permission) => (
-        <Tag
-          color={
-            record.type === PermissionType.catalogue ? 'blue' : record.type === PermissionType.MENU ? 'green' : 'orange'
-          }
-        >
-          {record.type}
-        </Tag>
-      ),
+      render: (_: any, record: Permission) => <PermissionTypeTag type={record.type} />,
     },
     {
       title: '路由',
@@ -187,7 +191,7 @@ export default function PermissionPage() {
       <AuthGuard permissionKeys="management:permission:search">
         <CombineSearch onSearch={handleSearch} config={SearchConfig} onReset={() => setSearchData([])} />
       </AuthGuard>
-      
+
       <Table columns={columns} dataSource={searchData.length > 0 ? searchData : data} rowKey="id" />
 
       <PermissionModal
