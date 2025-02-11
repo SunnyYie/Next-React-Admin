@@ -33,7 +33,7 @@ export interface Role {
   name: string
   label: string
   order?: number
-  desc?: string
+  description?: string
   permission?: Permission[]
 }
 

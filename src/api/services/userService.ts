@@ -15,18 +15,32 @@ export enum UserApi {
   SignIn = '/auth/login',
   SignUp = '/auth/register',
   Logout = '/auth/logout',
-  Refresh = '/auth/refresh',
-  User = '/user',
+
+  GetUsers = '/user/getUsers',
+  GetUserDetail = '/user/getUserDetail',
+  CreateUser = '/user/createUser',
+  UpdateUser = '/user/updateUser',
+  DeleteUser = '/user/deleteUser',
 }
 
 const signin = (data: SignInReq) => apiClient.post<SignInRes>({ url: UserApi.SignIn, data })
 const signup = (data: SignUpReq) => apiClient.post<SignInRes>({ url: UserApi.SignUp, data })
 const logout = () => apiClient.get({ url: UserApi.Logout })
-const findById = (id: string) => apiClient.get<UserInfo[]>({ url: `${UserApi.User}/${id}` })
+
+const getUsers = () => apiClient.get<UserInfo[]>({ url: UserApi.GetUsers })
+const getUserDetail = (id: string) => apiClient.get<UserInfo>({ url: UserApi.GetUserDetail, params: { id } })
+const createUser = (data: UserInfo) => apiClient.post<UserInfo>({ url: UserApi.CreateUser, data })
+const updateUser = (data: { id: string; data: UserInfo }) => apiClient.put<UserInfo>({ url: UserApi.UpdateUser, data })
+const deleteUser = (data: { id: string }) => apiClient.delete<UserInfo>({ url: UserApi.DeleteUser, data })
 
 export default {
   signin,
   signup,
-  findById,
   logout,
+
+  getUsers,
+  getUserDetail,
+  createUser,
+  updateUser,
+  deleteUser,
 }
