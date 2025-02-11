@@ -2,6 +2,7 @@ import permissionService from '../../../api/services/management/permissionServic
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Permission, PermissionType } from '../../../router/type'
 import { Button, message, Modal, Space, Table, Tag } from 'antd'
+import CircleLoading from '../../../components/circle-loading'
 import CombineSearch from '../../../components/combine-search'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import PermissionModal from './components/permissionModal'
@@ -172,8 +173,8 @@ export default function PermissionPage() {
     },
   ]
 
-  if (isLoading || searchPermissionMutation.isPending) return <div>Loading...</div>
-  if (isError || !data) return <Navigate to="/404" replace />
+  if (isLoading || searchPermissionMutation.isPending) return <CircleLoading />
+  if (isError || !data) return <Navigate to="/error" replace />
 
   return (
     <div>
@@ -183,8 +184,10 @@ export default function PermissionPage() {
         </Button>
       </AuthGuard>
 
-      <CombineSearch onSearch={handleSearch} config={SearchConfig} onReset={() => setSearchData([])} />
-
+      <AuthGuard permissionKeys="management:permission:search">
+        <CombineSearch onSearch={handleSearch} config={SearchConfig} onReset={() => setSearchData([])} />
+      </AuthGuard>
+      
       <Table columns={columns} dataSource={searchData.length > 0 ? searchData : data} rowKey="id" />
 
       <PermissionModal

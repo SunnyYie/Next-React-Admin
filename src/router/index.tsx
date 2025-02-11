@@ -7,7 +7,7 @@ import { lazy, Suspense } from 'react'
 
 import ProtectedRoute from './components/protected-route'
 import CircleLoading from '../components/circle-loading'
-import PageError from '../pages/errors/PageError'
+import Error from '../pages/errors/PageError'
 import Login from '../pages/public/login/Login'
 import DashboardLayout from '../layout'
 
@@ -17,7 +17,7 @@ const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env
 const PUBLIC_ROUTE: AppRouteObject = {
   path: '/login',
   element: (
-    <ErrorBoundary FallbackComponent={PageError}>
+    <ErrorBoundary FallbackComponent={Error}>
       <Login />
     </ErrorBoundary>
   ),
@@ -32,6 +32,7 @@ const NO_MATCHED_ROUTE: AppRouteObject = {
 const Page403 = lazy(() => import('../pages/errors/Page403'))
 const Page404 = lazy(() => import('../pages/errors/Page404'))
 const Page500 = lazy(() => import('../pages/errors/Page500'))
+const PageError = lazy(() => import('../pages/errors/PageError'))
 
 const ERROR_ROUTE: AppRouteObject = {
   element: (
@@ -45,6 +46,7 @@ const ERROR_ROUTE: AppRouteObject = {
     { path: '403', element: <Page403 /> },
     { path: '404', element: <Page404 /> },
     { path: '500', element: <Page500 /> },
+    { path: 'error', element: <PageError /> },
   ],
 }
 
