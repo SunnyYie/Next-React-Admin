@@ -1,21 +1,40 @@
 import permissionService from '../../../api/services/management/permissionService'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Permission, PermissionType } from '../../../router/type'
 import { Button, message, Modal, Space, Table, Tag } from 'antd'
+import CombineSearch from '../../../components/combine-search'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import PermissionModal from './components/permissionModal'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import AuthGuard from '../../../components/auth/authGuard'
 import { Navigate } from 'react-router'
 import { useState } from 'react'
-import AuthGuard from '../../../components/auth/authGuard'
+
+export type SearchParams = {
+  name?: string
+  type?: PermissionType
+}
+
+const permissionTypeOptions = [
+  { label: PermissionType.catalogue, value: PermissionType.catalogue },
+  { label: PermissionType.menu, value: PermissionType.menu },
+]
+
+const SearchConfig = [
+  { name: 'label', label: '权限名称', type: 'input' },
+  { name: 'type', label: '类型', type: 'select', options: permissionTypeOptions },
+]
 
 export default function PermissionPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['allpermissions'],
     queryFn: permissionService.getAllPermissions,
+    staleTime: 1000 * 60 * 2,
   })
 
   const [editingPermission, setEditingPermission] = useState<Permission | null>(null)
   const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const queryClient = useQueryClient()
 
   // 新增
   const createPermissionMutation = useMutation({
@@ -29,14 +48,29 @@ export default function PermissionPage() {
   const deletePermissionMutation = useMutation({
     mutationFn: permissionService.deletePermission,
   })
+  // 搜索
+  const searchPermissionMutation = useMutation({
+    mutationFn: permissionService.getPermissionsByCondition,
+  })
+  const [searchData, setSearchData] = useState<Permission[]>([])
 
   const handleAdd = () => {
+    setEditingPermission(null)
     setIsModalVisible(true)
   }
 
   const handleEdit = (record: Permission) => {
     setEditingPermission(record)
     setIsModalVisible(true)
+  }
+
+  const handleSearch = async (values: SearchParams) => {
+    try {
+      const data = await searchPermissionMutation.mutateAsync(values)
+      setSearchData(data)
+    } catch (error) {
+      message.error('搜索失败')
+    }
   }
 
   const handleDelete = (id: string) => {
@@ -49,6 +83,7 @@ export default function PermissionPage() {
           .mutateAsync({ permissionId: id })
           .then(() => {
             message.success('权限已删除')
+            queryClient.invalidateQueries({ queryKey: ['allpermissions'] })
           })
           .catch(() => {
             message.error('删除权限失败')
@@ -67,6 +102,8 @@ export default function PermissionPage() {
         await createPermissionMutation.mutateAsync({ roleId: '1', permissionData: [values] })
         message.success('新权限已添加')
       }
+
+      queryClient.invalidateQueries({ queryKey: ['allpermissions'] })
     } catch (error) {
       message.error(editingPermission ? '更新权限失败' : '添加权限失败')
     } finally {
@@ -135,7 +172,7 @@ export default function PermissionPage() {
     },
   ]
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading || searchPermissionMutation.isPending) return <div>Loading...</div>
   if (isError || !data) return <Navigate to="/404" replace />
 
   return (
@@ -145,7 +182,10 @@ export default function PermissionPage() {
           添加权限
         </Button>
       </AuthGuard>
-      <Table columns={columns} dataSource={data} rowKey="id" />
+
+      <CombineSearch onSearch={handleSearch} config={SearchConfig} onReset={() => setSearchData([])} />
+
+      <Table columns={columns} dataSource={searchData.length > 0 ? searchData : data} rowKey="id" />
 
       <PermissionModal
         visible={isModalVisible}

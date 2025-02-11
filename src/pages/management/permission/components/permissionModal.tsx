@@ -10,7 +10,7 @@ interface PermissionModalProps {
   initialValues?: Permission | null
 }
 
-const options: CheckboxGroupProps<string>['options'] = [
+const permissionTypeOptions: CheckboxGroupProps<string>['options'] = [
   { label: PermissionType.catalogue, value: 'CATALOGUE' },
   { label: PermissionType.menu, value: 'MENU' },
 ]
@@ -23,6 +23,13 @@ const hideOptions: CheckboxGroupProps<boolean>['options'] = [
 export default function PermissionForm({ visible, onCancel, onSave, initialValues }: PermissionModalProps) {
   const [form] = Form.useForm()
 
+  const handleOk = () => {
+    form.validateFields().then(values => {
+      onSave(values)
+      form.resetFields()
+    })
+  }
+
   useEffect(() => {
     if (visible && initialValues) {
       form.setFieldsValue(initialValues)
@@ -30,13 +37,6 @@ export default function PermissionForm({ visible, onCancel, onSave, initialValue
       form.resetFields()
     }
   }, [visible, initialValues, form])
-
-  const handleOk = () => {
-    form.validateFields().then(values => {
-      onSave(values)
-      form.resetFields()
-    })
-  }
 
   return (
     <Modal
@@ -47,14 +47,14 @@ export default function PermissionForm({ visible, onCancel, onSave, initialValue
       cancelText="取消"
       okText="保存"
     >
-      <Form form={form} layout="vertical">
+      <Form form={form} layout="vertical" initialValues={{ type: String(initialValues?.type || PermissionType.menu) }}>
         {/* 权限类型 */}
         <Form.Item name="type" label="权限类型" rules={[{ required: true, message: '请选择权限类型' }]}>
           <Radio.Group
             defaultValue={String(PermissionType.menu)}
             buttonStyle="solid"
             optionType="button"
-            options={options}
+            options={permissionTypeOptions}
             block
           />
         </Form.Item>
