@@ -4,6 +4,7 @@ import apiClient from '../../apiClient'
 export enum UserApi {
   GetAllPermissionKeys = 'user/getPermissionKeysAll',
   GetPermissionKeys = 'user/getPermissionKeys',
+  GetPermissionKeysByCondition = 'user/getPermissionKeysByCondition',
   CreatePermissionKey = 'user/createPermissionKey',
   UpdatePermissionKey = 'user/updatePermissionKey',
   DeletePermissionKey = 'user/deletePermissionKey',
@@ -14,6 +15,9 @@ const getAllPermissionKeys = () => apiClient.get<PermissionKey[]>({ url: UserApi
 // 获取角色对应权限数组
 const getPermissionKeys = (roleId: string) =>
   apiClient.post<PermissionKey[]>({ url: UserApi.GetPermissionKeys, data: { roleId } })
+
+// 条件查询权限标识
+const getPermissionKeysByCondition = (data: any) => apiClient.post({ url: UserApi.GetPermissionKeysByCondition, data })
 
 // 新增用户权限
 const createPermissionKey = (data: { roleId: string; permissionData: PermissionKey[] }) =>
@@ -30,6 +34,7 @@ const deletePermissionKey = (data: { permissionId: string }) =>
 export default {
   getAllPermissionKeys,
   getPermissionKeys,
+  getPermissionKeysByCondition,
   createPermissionKey,
   updatePermissionKey,
   deletePermissionKey,

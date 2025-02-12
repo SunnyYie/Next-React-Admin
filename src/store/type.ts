@@ -13,6 +13,8 @@ export interface RolePermissionKey {
 export interface PermissionKey {
   id: string
   label: string
+  name: string
+  roleId?: string
   RolePermissionKeys?: RolePermissionKey[]
 }
 

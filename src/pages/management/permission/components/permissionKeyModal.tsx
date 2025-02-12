@@ -48,6 +48,9 @@ export default function PermissionKeyModal({ visible, onCancel, onSave, initialV
         <Form.Item name="label" label="权限标识" rules={[{ required: true, message: '请输入权限标识' }]}>
           <Input placeholder="xxx:xxx:add" />
         </Form.Item>
+        <Form.Item name="name" label="标识名" rules={[{ required: true, message: '请输入标识名' }]}>
+          <Input placeholder="请输入标识名" />
+        </Form.Item>
       </Form>
     </Modal>
   )

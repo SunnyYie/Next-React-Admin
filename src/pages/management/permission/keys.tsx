@@ -1,21 +1,36 @@
 import permissionKeyService from '../../../api/services/management/permissionKeyService'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+// import useToastConfirm from '../../../components/toast/useToastConfirm'
 import PermissionKeyModal from './components/permissionKeyModal'
-import { Button, message, Modal, Space, Table, Tag } from 'antd'
+import { Button, message, Modal, Space, Table } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import AuthGuard from '../../../components/auth/authGuard'
 import { PermissionKey } from '../../../store/type'
 import { Navigate } from 'react-router'
 import { useState } from 'react'
-import AuthGuard from '../../../components/auth/authGuard'
+import RoleTag from '../../../components/tag/role-tag'
+import CircleLoading from '../../../components/circle-loading'
+import CombineSearch from '../../../components/combine-search'
+
+type SearchParams = {
+  label?: string
+}
+
+const SearchConfig = [{ name: 'name', label: '权限标识名', type: 'input' }]
 
 export default function PermissionKeyPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['allpermissionKeys'],
     queryFn: permissionKeyService.getAllPermissionKeys,
+    staleTime: 1000 * 60 * 2,
   })
 
   const [editingPermissionKey, setEditingPermissionKeys] = useState<PermissionKey | null>(null)
   const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const queryClient = useQueryClient()
+
+  // const showDeleteConfirm = useToastConfirm()
 
   // 新增
   const createPermissionKeyMutation = useMutation({
@@ -29,8 +44,14 @@ export default function PermissionKeyPage() {
   const deletePermissionKeyMutation = useMutation({
     mutationFn: permissionKeyService.deletePermissionKey,
   })
+  // 搜索
+  const searchPermissionKeyMutation = useMutation({
+    mutationFn: permissionKeyService.getPermissionKeysByCondition,
+  })
+  const [searchData, setSearchData] = useState<PermissionKey[]>([])
 
   const handleAdd = () => {
+    setEditingPermissionKeys(null)
     setIsModalVisible(true)
   }
 
@@ -49,12 +70,22 @@ export default function PermissionKeyPage() {
           .mutateAsync({ permissionId: id })
           .then(() => {
             message.success('权限标识已删除')
+            queryClient.invalidateQueries({ queryKey: ['allpermissionKeys'] })
           })
           .catch(() => {
             message.error('删除权限标识失败')
           })
       },
     })
+  }
+
+  const handleSearch = async (values: SearchParams) => {
+    try {
+      const data = await searchPermissionKeyMutation.mutateAsync(values)
+      setSearchData(data)
+    } catch (error) {
+      message.error('搜索失败')
+    }
   }
 
   const handleSave = async (values: PermissionKey) => {
@@ -64,9 +95,14 @@ export default function PermissionKeyPage() {
         message.success('权限标识已更新')
       } else {
         // 添加新权限
-        await createPermissionKeyMutation.mutateAsync({ roleId: '1', permissionData: [values] })
+        const { roleId } = values
+        delete values.roleId
+
+        await createPermissionKeyMutation.mutateAsync({ roleId: String(roleId!), permissionData: [values] })
         message.success('新权限标识已添加')
       }
+
+      queryClient.invalidateQueries({ queryKey: ['allpermissionKeys'] })
     } catch (error) {
       message.error(editingPermissionKey ? '更新权限标识失败' : '添加权限标识失败')
     } finally {
@@ -81,14 +117,17 @@ export default function PermissionKeyPage() {
       key: 'label',
     },
     {
+      title: '标识名',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
       title: '角色',
       key: 'roles',
       render: (_: any, record: PermissionKey) => (
         <Space size="middle">
           {record.RolePermissionKeys?.map(role => (
-            <Tag color={role.roleId == '1' ? 'green' : 'blue'} key={role.id}>
-              {role.roleId == '1' ? '管理员' : '用户'}
-            </Tag>
+            <RoleTag key={role.id} role={role} />
           ))}
         </Space>
       ),
@@ -111,7 +150,8 @@ export default function PermissionKeyPage() {
     },
   ]
 
-  if (isLoading) return <div>Loading...</div>
+  // if (isLoading || searchPermissionMutation.isPending) return <CircleLoading />
+  if (isLoading) return <CircleLoading />
   if (isError || !data) return <Navigate to="/404" replace />
 
   return (
@@ -121,7 +161,12 @@ export default function PermissionKeyPage() {
           添加权限
         </Button>
       </AuthGuard>
-      <Table columns={columns} dataSource={data} rowKey="id" />
+
+      <AuthGuard permissionKeys="management:permissionKey:search">
+        <CombineSearch onSearch={handleSearch} config={SearchConfig} onReset={() => setSearchData([])} />
+      </AuthGuard>
+
+      <Table columns={columns} dataSource={searchData.length > 0 ? searchData : data} rowKey="id" />
 
       <PermissionKeyModal
         visible={isModalVisible}

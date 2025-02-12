@@ -1,8 +1,9 @@
 import { PermissionRole } from '../../router/type'
 import { Tag } from 'antd'
+import { RolePermissionKey } from '../../store/type'
 
 interface RoleTagProps {
-  role: PermissionRole
+  role: PermissionRole | RolePermissionKey
 }
 
 export default function RoleTag({ role }: RoleTagProps) {
