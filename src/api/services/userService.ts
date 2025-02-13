@@ -19,6 +19,7 @@ export enum UserApi {
   GetUsers = '/user/getUsers',
   GetUserDetail = '/user/getUserDetail',
   CreateUser = '/user/createUser',
+  SearchUser = '/user/getUsersByCondition',
   UpdateUser = '/user/updateUser',
   DeleteUser = '/user/deleteUser',
 }
@@ -30,6 +31,7 @@ const logout = () => apiClient.get({ url: UserApi.Logout })
 const getUsers = () => apiClient.get<UserInfo[]>({ url: UserApi.GetUsers })
 const getUserDetail = (id: string) => apiClient.get<UserInfo>({ url: UserApi.GetUserDetail, params: { id } })
 const createUser = (data: UserInfo) => apiClient.post<UserInfo>({ url: UserApi.CreateUser, data })
+const searchUser = (data: { name?: string; email?: string }) => apiClient.get<UserInfo[]>({ url: UserApi.SearchUser, params: data })
 const updateUser = (data: { id: string; data: UserInfo }) => apiClient.put<UserInfo>({ url: UserApi.UpdateUser, data })
 const deleteUser = (data: { id: string }) => apiClient.delete<UserInfo>({ url: UserApi.DeleteUser, data })
 
@@ -41,6 +43,7 @@ export default {
   getUsers,
   getUserDetail,
   createUser,
+  searchUser,
   updateUser,
   deleteUser,
 }

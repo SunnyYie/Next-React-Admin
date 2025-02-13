@@ -13,7 +13,7 @@ import CircleLoading from '../../../components/circle-loading'
 import CombineSearch from '../../../components/combine-search'
 
 type SearchParams = {
-  label?: string
+  name?: string
 }
 
 const SearchConfig = [{ name: 'name', label: '权限标识名', type: 'input' }]
@@ -89,24 +89,27 @@ export default function PermissionKeyPage() {
   }
 
   const handleSave = async (values: PermissionKey) => {
+    setIsModalVisible(false)
+
     try {
       if (editingPermissionKey) {
-        await updatePermissionKeyMutation.mutateAsync({ permissionId: editingPermissionKey.id, permissionData: values })
+        await updatePermissionKeyMutation.mutateAsync({
+          permissionId: editingPermissionKey.id,
+          permissionKeyData: values,
+        })
         message.success('权限标识已更新')
       } else {
         // 添加新权限
         const { roleId } = values
         delete values.roleId
 
-        await createPermissionKeyMutation.mutateAsync({ roleId: String(roleId!), permissionData: [values] })
+        await createPermissionKeyMutation.mutateAsync({ roleId: String(roleId!), permissionKeyData: [values] })
         message.success('新权限标识已添加')
       }
 
       queryClient.invalidateQueries({ queryKey: ['allpermissionKeys'] })
     } catch (error) {
       message.error(editingPermissionKey ? '更新权限标识失败' : '添加权限标识失败')
-    } finally {
-      setIsModalVisible(false)
     }
   }
 
@@ -158,7 +161,7 @@ export default function PermissionKeyPage() {
     <div>
       <AuthGuard permissionKeys="management:permissionKey:add">
         <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
-          添加权限
+          添加权限标识
         </Button>
       </AuthGuard>
 

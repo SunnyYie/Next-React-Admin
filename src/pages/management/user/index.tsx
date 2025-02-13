@@ -1,19 +1,33 @@
 import { Table, Button, Space, Modal, message, Tag } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import userService from '../../../api/services/userService'
 import { Navigate, useNavigate } from 'react-router'
 import UserModal from './components/userModal'
 import { UserInfo } from '../../../store/type'
 import { useState } from 'react'
+import AuthGuard from '../../../components/auth/authGuard'
+import CombineSearch from '../../../components/combine-search'
 
 const { confirm } = Modal
+
+type SearchParams = {
+  name?: string
+  email?: string
+}
+
+const SearchConfig = [
+  { name: 'name', label: '用户名', type: 'input' },
+  { name: 'email', label: '邮箱', type: 'input' },
+]
 
 export default function UserList() {
   const { data, isError, isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: userService.getUsers,
   })
+
+  const queryClient = useQueryClient()
 
   // 新增
   const createUserMutation = useMutation({
@@ -27,6 +41,11 @@ export default function UserList() {
   const deleteUserMutation = useMutation({
     mutationFn: userService.deleteUser,
   })
+  // 搜索
+  const searchUserMutation = useMutation({
+    mutationFn: userService.searchUser,
+  })
+  const [searchData, setSearchData] = useState<UserInfo[]>([])
 
   const navigate = useNavigate()
 
@@ -43,6 +62,15 @@ export default function UserList() {
     setIsFormModalVisible(true)
   }
 
+  const handleSearch = async (values: SearchParams) => {
+    try {
+      const data = await searchUserMutation.mutateAsync(values)
+      setSearchData(data)
+    } catch (error) {
+      message.error('搜索失败')
+    }
+  }
+
   const handleDelete = (id: string) => {
     confirm({
       title: '确认删除',
@@ -53,6 +81,7 @@ export default function UserList() {
           .mutateAsync({ id })
           .then(() => {
             message.success('用户已删除')
+            queryClient.invalidateQueries({ queryKey: ['users'] })
           })
           .catch(() => {
             message.error('删除用户失败')
@@ -66,16 +95,22 @@ export default function UserList() {
   }
 
   const handleSave = async (values: UserInfo) => {
-    if (editingUser) {
-      // 编辑现有用户
-      await updateUserMutation.mutateAsync({ id: editingUser.id, data: values })
-      message.success('用户信息已更新')
-    } else {
-      // 添加新用户
-      await createUserMutation.mutateAsync(values)
-      message.success('新用户已添加')
+    try {
+      if (editingUser) {
+        // 编辑现有用户
+        await updateUserMutation.mutateAsync({ id: editingUser.id, data: values })
+        message.success('用户信息已更新')
+      } else {
+        // 添加新用户
+        await createUserMutation.mutateAsync(values)
+        message.success('新用户已添加')
+      }
+      setIsFormModalVisible(false)
+      queryClient.invalidateQueries({ queryKey: ['users'] })
+    } catch (error) {
+      message.error('新增用户失败')
+      console.error('新增用户失败:', error)
     }
-    setIsFormModalVisible(false)
   }
 
   const columns = [
@@ -127,11 +162,17 @@ export default function UserList() {
       key: 'action',
       render: (_: any, record: UserInfo) => (
         <Space size="middle">
-          <Button onClick={() => handleViewDetails(record)}>查看</Button>
-          <Button onClick={() => handleEdit(record)}>编辑</Button>
-          <Button danger onClick={() => handleDelete(record.id)}>
-            删除
-          </Button>
+          <AuthGuard permissionKeys="management:user:detail">
+            <Button onClick={() => handleViewDetails(record)}>查看</Button>
+          </AuthGuard>
+          <AuthGuard permissionKeys="management:user:edit">
+            <Button onClick={() => handleEdit(record)}>编辑</Button>
+          </AuthGuard>
+          <AuthGuard permissionKeys="management:user:delete">
+            <Button danger onClick={() => handleDelete(record.id)}>
+              删除
+            </Button>
+          </AuthGuard>
         </Space>
       ),
     },
@@ -147,10 +188,17 @@ export default function UserList() {
 
   return (
     <div>
-      <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
-        添加用户
-      </Button>
-      <Table columns={columns} dataSource={data} rowKey="id" />
+      <AuthGuard permissionKeys="management:user:add">
+        <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
+          添加用户
+        </Button>
+      </AuthGuard>
+
+      <AuthGuard permissionKeys="management:user:search">
+        <CombineSearch onSearch={handleSearch} config={SearchConfig} onReset={() => setSearchData([])} />
+      </AuthGuard>
+
+      <Table columns={columns} dataSource={searchData.length > 0 ? searchData : data} rowKey="id" />
 
       <UserModal
         visible={isFormModalVisible}

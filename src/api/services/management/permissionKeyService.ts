@@ -20,11 +20,11 @@ const getPermissionKeys = (roleId: string) =>
 const getPermissionKeysByCondition = (data: any) => apiClient.post({ url: UserApi.GetPermissionKeysByCondition, data })
 
 // 新增用户权限
-const createPermissionKey = (data: { roleId: string; permissionData: PermissionKey[] }) =>
+const createPermissionKey = (data: { roleId: string; permissionKeyData: PermissionKey[] }) =>
   apiClient.post({ url: UserApi.CreatePermissionKey, data })
 
 // 修改用户权限
-const updatePermissionKey = (data: { permissionId: string; permissionData: PermissionKey }) =>
+const updatePermissionKey = (data: { permissionId: string; permissionKeyData: PermissionKey }) =>
   apiClient.put({ url: UserApi.CreatePermissionKey, data })
 
 // 删除用户权限
